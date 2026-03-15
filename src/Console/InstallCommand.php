@@ -44,21 +44,21 @@ class InstallCommand extends Command
 
     protected function updateBroadcastConfig()
     {
-
         $config = config_path('broadcasting.php');
 
-        // agar broadcasting config nahi hai
         if (!file_exists($config)) {
 
-            $this->info('Broadcasting config not found. Installing broadcasting...');
+            $this->info('Publishing broadcasting config...');
 
-            $this->call('install:broadcasting');
+            $this->call('vendor:publish', [
+                '--tag' => 'broadcasting-config',
+                '--force' => true
+            ]);
         }
 
         $content = file_get_contents($config);
 
         if (str_contains($content, "'comnestor'")) {
-            $this->info('Comnestor driver already exists');
             return;
         }
 
@@ -80,7 +80,7 @@ class InstallCommand extends Command
 
         file_put_contents($config, $content);
 
-        $this->info('Broadcast driver added successfully');
+        $this->info('Comnestor driver added.');
     }
 
 }
