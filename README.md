@@ -61,8 +61,9 @@ php artisan comnestor:install
 Then set these values in `.env`:
 
 ```env
-BROADCAST_DRIVER=comnestor
-COMNESTOR_BASE_URL=https://your-comnestor-server.com
+BROADCAST_CONNECTION=comnestor
+
+COMNESTOR_BASE_URL=https://comnestor.cloud
 COMNESTOR_APP_KEY=your-app-key
 COMNESTOR_APP_SECRET=your-app-secret
 ```
@@ -102,16 +103,16 @@ This command will:
 Add or update these variables in your `.env` file:
 
 ```env
-BROADCAST_DRIVER=comnestor
+BROADCAST_CONNECTION=comnestor
 
-COMNESTOR_BASE_URL=https://your-comnestor-server.com
+COMNESTOR_BASE_URL=https://comnestor.cloud
 COMNESTOR_APP_KEY=your-app-key
 COMNESTOR_APP_SECRET=your-app-secret
 ```
 
 Variable reference:
 
-- `BROADCAST_DRIVER`: selects the active Laravel broadcast driver
+- `BROADCAST_CONNECTION`: selects the active Laravel broadcast driver
 - `COMNESTOR_BASE_URL`: Comnestor API base URL (use `https` in production)
 - `COMNESTOR_APP_KEY`: public identifier for your app
 - `COMNESTOR_APP_SECRET`: private secret used to sign API requests
@@ -218,30 +219,40 @@ Open `/broadcast-test` in your browser or API client to dispatch one event.
 
 ## Step 7: Listen from JavaScript
 
-Example websocket listener (adapt as needed to your Comnestor websocket protocol):
+Comnestor provides a lightweight JavaScript client that allows frontend applications to listen for realtime events easily.
+
+Include the Comnestor CDN in your page:
 
 ```html
+<div id="order-events"></div>
+
+<script src="https://comnestor.cloud/cdn/comnestor.js"></script>
+
 <script>
-  const socket = new WebSocket('wss://your-comnestor-server.com/ws');
 
-  socket.addEventListener('open', () => {
-        socket.send(JSON.stringify({
-          action: 'subscribe',
-          channel: 'orders'
-        }));
-  });
+    const socket = Comnestor.connect("APP_KEY", {
+        host: "www.comnestor.cloud"
+    })
 
-  socket.addEventListener('message', (event) => {
-        const payload = JSON.parse(event.data);
+    const channel = socket.subscribe("orders")
 
-        if (payload.channel === 'orders' && payload.event === 'order.created') {
-          console.log('Order created:', payload.data);
-        }
-  });
+    channel.listen("order.created", (data) => {
 
-  socket.addEventListener('error', (error) => {
-        console.error('WebSocket error:', error);
-  });
+        const div = document.createElement("div")
+
+        div.className = "p-3 bg-green-100 border rounded"
+
+        div.innerHTML = `
+            <b>New Order Received</b><br>
+            Order ID: ${data.order.id}<br>
+            Status: ${data.order.status}<br>
+            Total: ${data.order.total}
+        `
+
+        document.getElementById("order-events").prepend(div)
+
+    })
+
 </script>
 ```
 
@@ -267,7 +278,7 @@ Example websocket listener (adapt as needed to your Comnestor websocket protocol
 
 ### Events are not reaching Comnestor
 
-- Ensure `BROADCAST_DRIVER=comnestor` is set
+- Ensure `BROADCAST_CONNECTION=comnestor` is set
 - Verify `COMNESTOR_BASE_URL`, `COMNESTOR_APP_KEY`, `COMNESTOR_APP_SECRET`
 - Confirm your Laravel server can access the Comnestor API URL
 - Check application logs for `Comnestor broadcast failed`
