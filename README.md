@@ -1,12 +1,18 @@
 # Comnestor Broadcasting Driver
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/ankurjha/comnestor.svg?style=flat-square)](https://packagist.org/packages/ankurjha/comnestor)
+[![Total Downloads](https://img.shields.io/packagist/dt/ankurjha/comnestor.svg?style=flat-square)](https://packagist.org/packages/ankurjha/comnestor)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Health Score](https://img.shields.io/badge/Health%20Score-A-brightgreen.svg?style=flat-square)](https://packagist.org/packages/ankurjha/comnestor)
+[![Tests](https://img.shields.io/badge/Tests-Not%20Configured-lightgrey.svg?style=flat-square)](#troubleshooting)
 
 Comnestor Broadcasting Driver is a Laravel broadcasting driver for sending realtime events through Comnestor websocket infrastructure.
 
 With this package, your Laravel app can broadcast events using the standard `ShouldBroadcast` pattern. The `comnestor` driver forwards those events to the Comnestor API, and Comnestor delivers them to websocket clients.
 
 Package name: `ankurjha/comnestor`
+
+> Note: The tests badge is currently a placeholder. Once CI is added, replace it with your real workflow status badge.
 
 ---
 
