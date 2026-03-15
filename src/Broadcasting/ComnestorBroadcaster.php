@@ -4,10 +4,10 @@ namespace Ankurjha\Comnestor\Broadcasting;
 
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ComnestorBroadcaster extends Broadcaster
 {
-
     protected $baseUrl;
     protected $appKey;
     protected $appSecret;
@@ -31,7 +31,6 @@ class ComnestorBroadcaster extends Broadcaster
 
     public function broadcast(array $channels, $event, array $payload = [])
     {
-
         $timestamp = time();
 
         $dataJson = json_encode($payload);
@@ -40,17 +39,25 @@ class ComnestorBroadcaster extends Broadcaster
 
         $signature = hash_hmac('sha256', $stringToSign, $this->appSecret);
 
-        Http::post($this->baseUrl.'/api/events', [
+        try {
 
-            'app_key' => $this->appKey,
-            'timestamp' => $timestamp,
-            'signature' => $signature,
-            'channels' => $channels,
-            'event' => $event,
-            'data' => $payload,
+            Http::post($this->baseUrl.'/api/events', [
 
-        ]);
+                'app_key' => $this->appKey,
+                'timestamp' => $timestamp,
+                'signature' => $signature,
+                'channels' => $channels,
+                'event' => $event,
+                'data' => $payload,
 
+            ]);
+
+        } catch (\Exception $e) {
+
+            Log::error('Comnestor broadcast failed', [
+                'error' => $e->getMessage()
+            ]);
+
+        }
     }
-
 }
