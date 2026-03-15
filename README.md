@@ -63,7 +63,7 @@ Then set these values in `.env`:
 ```env
 BROADCAST_CONNECTION=comnestor
 
-COMNESTOR_BASE_URL=https://comnestor.cloud
+COMNESTOR_BASE_URL=https://www.comnestor.cloud
 COMNESTOR_APP_KEY=your-app-key
 COMNESTOR_APP_SECRET=your-app-secret
 ```
@@ -105,7 +105,7 @@ Add or update these variables in your `.env` file:
 ```env
 BROADCAST_CONNECTION=comnestor
 
-COMNESTOR_BASE_URL=https://comnestor.cloud
+COMNESTOR_BASE_URL=https://www.comnestor.cloud
 COMNESTOR_APP_KEY=your-app-key
 COMNESTOR_APP_SECRET=your-app-secret
 ```
