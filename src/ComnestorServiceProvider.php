@@ -11,13 +11,12 @@ class ComnestorServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-
-        $this->app->make(BroadcastManager::class)->extend(
-            'comnestor',
-            function ($app, $config) {
+        // broadcasting driver register
+        $this->app->afterResolving(BroadcastManager::class, function ($manager) {
+            $manager->extend('comnestor', function ($app, $config) {
                 return new ComnestorBroadcaster($config);
-            }
-        );
+            });
+        });
 
         if ($this->app->runningInConsole()) {
             $this->commands([
