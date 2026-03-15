@@ -1,0 +1,21 @@
+{
+    "name": "ankurjha/comnestor",
+    "description": "Comnestor Broadcasting Client for Laravel",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Ankurjha\\Comnestor\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ankurjha\\Comnestor\\ComnestorServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0"
+    }
+}
