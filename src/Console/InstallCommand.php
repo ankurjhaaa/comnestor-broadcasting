@@ -31,12 +31,12 @@ class InstallCommand extends Command
         $path = app_path('Services/ComnestorBroadcasting.php');
 
         if (!File::exists(dirname($path))) {
-            File::makeDirectory(dirname($path),0755,true);
+            File::makeDirectory(dirname($path), 0755, true);
         }
 
-        $stub = file_get_contents(__DIR__.'/../Stubs/ComnestorBroadcasting.stub');
+        $stub = file_get_contents(__DIR__ . '/../Stubs/ComnestorBroadcasting.stub');
 
-        File::put($path,$stub);
+        File::put($path, $stub);
 
         $this->info('Created Service file');
 
@@ -47,9 +47,18 @@ class InstallCommand extends Command
 
         $config = config_path('broadcasting.php');
 
+        // agar broadcasting config nahi hai
+        if (!file_exists($config)) {
+
+            $this->info('Broadcasting config not found. Installing broadcasting...');
+
+            $this->call('install:broadcasting');
+        }
+
         $content = file_get_contents($config);
 
-        if (str_contains($content,'comnestor')) {
+        if (str_contains($content, "'comnestor'")) {
+            $this->info('Comnestor driver already exists');
             return;
         }
 
@@ -61,14 +70,17 @@ class InstallCommand extends Command
             'app_key' => env('COMNESTOR_APP_KEY'),
             'app_secret' => env('COMNESTOR_APP_SECRET'),
         ],
-        ";
+";
 
-        $content = str_replace("'connections' => [","'connections' => [".$insert,$content);
+        $content = str_replace(
+            "'connections' => [",
+            "'connections' => [" . $insert,
+            $content
+        );
 
-        file_put_contents($config,$content);
+        file_put_contents($config, $content);
 
-        $this->info('Broadcast driver added');
-
+        $this->info('Broadcast driver added successfully');
     }
 
 }
