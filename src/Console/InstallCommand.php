@@ -17,30 +17,13 @@ class InstallCommand extends Command
 
         $this->info('Installing Comnestor broadcasting...');
 
-        $this->createServiceFile();
-
         $this->updateBroadcastConfig();
 
-        $this->info('Comnestor installed successfully');
+        $this->info('Comnestor broadcasting driver installed successfully');
 
     }
 
-    protected function createServiceFile()
-    {
-
-        $path = app_path('Services/ComnestorBroadcasting.php');
-
-        if (!File::exists(dirname($path))) {
-            File::makeDirectory(dirname($path), 0755, true);
-        }
-
-        $stub = file_get_contents(__DIR__ . '/../Stubs/ComnestorBroadcasting.stub');
-
-        File::put($path, $stub);
-
-        $this->info('Created Service file');
-
-    }
+    
 
     protected function updateBroadcastConfig()
     {
