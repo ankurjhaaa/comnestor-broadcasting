@@ -46,19 +46,37 @@ class InstallCommand extends Command
     {
         $config = config_path('broadcasting.php');
 
+        // agar broadcasting config exist nahi karta
         if (!file_exists($config)) {
 
-            $this->info('Publishing broadcasting config...');
+            $this->info('Broadcasting config not found. Creating...');
 
-            $this->call('vendor:publish', [
-                '--tag' => 'broadcasting-config',
-                '--force' => true
-            ]);
+            $stub = __DIR__ . '/../Stubs/broadcasting.stub';
+
+            if (file_exists($stub)) {
+                copy($stub, $config);
+            } else {
+
+                // minimal fallback config
+                file_put_contents($config, "<?php
+
+return [
+
+    'default' => env('BROADCAST_DRIVER', 'null'),
+
+    'connections' => [
+
+    ],
+
+];
+");
+            }
         }
 
         $content = file_get_contents($config);
 
         if (str_contains($content, "'comnestor'")) {
+            $this->info('Comnestor driver already exists.');
             return;
         }
 
@@ -80,7 +98,7 @@ class InstallCommand extends Command
 
         file_put_contents($config, $content);
 
-        $this->info('Comnestor driver added.');
+        $this->info('Comnestor driver added successfully.');
     }
 
 }
