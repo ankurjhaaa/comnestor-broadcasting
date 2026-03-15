@@ -38,7 +38,7 @@ The installer will:
 Add these values in your `.env`:
 
 ```env
-BROADCAST_DRIVER=comnestor
+BROADCAST_CONNECTION=comnestor
 
 COMNESTOR_BASE_URL=https://comnestor.cloud
 COMNESTOR_APP_KEY=app-key
