@@ -33,23 +33,29 @@ class ComnestorBroadcaster extends Broadcaster
     {
         $timestamp = time();
 
-        $dataJson = json_encode($payload);
+        // Laravel Channel objects ko string me convert
+        $channels = array_map(function ($channel) {
+            return is_object($channel) ? $channel->name : $channel;
+        }, $channels);
 
-        $stringToSign = $this->appKey.$timestamp.implode(',', $channels).$event.$dataJson;
+        // Laravel payload structure fix
+        $data = $payload['data'] ?? $payload;
+
+        $dataJson = json_encode($data);
+
+        $stringToSign = $this->appKey . $timestamp . implode(',', $channels) . $event . $dataJson;
 
         $signature = hash_hmac('sha256', $stringToSign, $this->appSecret);
 
         try {
 
-            Http::post($this->baseUrl.'/api/events', [
-
+            Http::post($this->baseUrl . '/api/events', [
                 'app_key' => $this->appKey,
                 'timestamp' => $timestamp,
                 'signature' => $signature,
                 'channels' => $channels,
                 'event' => $event,
-                'data' => $payload,
-
+                'data' => $data,
             ]);
 
         } catch (\Exception $e) {
