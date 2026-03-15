@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Http;
+
+/*
+|--------------------------------------------------------------------------
+| Comnestor Broadcasting Helper
+|--------------------------------------------------------------------------
+|
+| Example usage:
+|
+| use App\Services\ComnestorBroadcasting;
+|
+| ComnestorBroadcasting::send(
+|     'order.created',
+|     'orders',
+|     ['order_id' => 10]
+| );
+|
+*/
+
+class ComnestorBroadcasting
+{
+
+    public static function send(string $event,string $channel,array $data)
+    {
+
+        broadcast(new class($event,$channel,$data) implements \Illuminate\Contracts\Broadcasting\ShouldBroadcast {
+
+            public $event;
+            public $channel;
+            public $data;
+
+            public function __construct($event,$channel,$data)
+            {
+                $this->event = $event;
+                $this->channel = $channel;
+                $this->data = $data;
+            }
+
+            public function broadcastOn()
+            {
+                return [$this->channel];
+            }
+
+            public function broadcastAs()
+            {
+                return $this->event;
+            }
+
+            public function broadcastWith()
+            {
+                return $this->data;
+            }
+
+        });
+
+    }
+
+}
